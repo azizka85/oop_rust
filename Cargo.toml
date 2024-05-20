@@ -1,0 +1,12 @@
+[package]
+name = "oop_rust"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+members = [
+  "circular_linked_list"
+, "linked_list"]
+
+[dependencies]
