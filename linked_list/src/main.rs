@@ -1,5 +1,7 @@
 pub mod linked_list;
 
+// use std::{cell::RefCell, rc::Rc};
+
 use linked_list::ListNode;
 
 fn main() {
@@ -62,4 +64,77 @@ fn main() {
 
         current = node;  
     }
+
+    /* let node_1 = Rc::new(
+        RefCell::new(
+            ListNode::new(1)
+        )
+    );
+
+    let node_2 = Rc::new(
+        RefCell::new(
+            ListNode::new(2)
+        )
+    );
+
+    println!("Number of references to node_2 after creating = {}", Rc::strong_count(&node_2));
+
+    let node_3 = Rc::new(
+        RefCell::new(
+            ListNode::new(3)
+        )
+    );
+
+    ListNode::link(node_1.clone(), node_2.clone());
+
+    println!("Number of references to node_2 after linking to node_1 = {}", Rc::strong_count(&node_2));
+
+    ListNode::link(node_2.clone(), node_3.clone());
+
+    println!("Number of references to node_2 after linking node_3 to this node = {}", Rc::strong_count(&node_2));
+
+    let mut current = node_1.clone();
+
+    println!("{}", current.borrow().val);
+
+    while let Some(node) = current.clone().borrow().next.clone() {
+        println!("{}", node.borrow().val);
+
+        current = node.clone();
+    }
+
+    println!("Number of references to node_2 after traversing = {}", Rc::strong_count(&node_2));
+
+    println!("\n--- Deleting node with val = 2");
+
+    let mut current = node_1.clone();
+    let mut target_node = node_1.clone();
+
+    println!("{}", current.borrow().val);
+
+    while let Some(node) = current.clone().borrow().next.clone() {
+        if node.borrow().val == 2 {
+            target_node = node;
+
+            break;
+        } else {
+            println!("{}", node.borrow().val);
+
+            current = node.clone();
+        }
+    }
+
+    println!("Number of references to node_2 after finding to delete = {}", Rc::strong_count(&node_2));
+
+    ListNode::unlink(current.clone(), target_node.clone());
+
+    target_node = node_1.clone();
+
+    println!("Number of references to node_2 after unlinking from node_1 = {}", Rc::strong_count(&node_2));
+
+    while let Some(node) = current.clone().borrow().next.clone() {
+        println!("{}", node.borrow().val);
+
+        current = node.clone();
+    } */
 }

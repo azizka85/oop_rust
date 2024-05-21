@@ -96,13 +96,13 @@ impl<T> ListNode<T> {
         item_ptr
     }
 
-    pub fn link(current: Rc<RefCell<Self>>, node: Rc<RefCell<Self>>) {
+    pub fn link(current: &mut Rc<RefCell<Self>>, node: &mut Rc<RefCell<Self>>) {
         let next = current.borrow_mut().next.take();
 
         current.borrow_mut().next = Some(node.clone());
 
         if let Some(ptr) = next.as_ref() {
-			if Rc::ptr_eq(&current, ptr) {
+			if Rc::ptr_eq(current, ptr) {
 				current.borrow_mut().prev = Some(node.clone());
 			}
         }
@@ -111,7 +111,7 @@ impl<T> ListNode<T> {
         node.borrow_mut().next = next;
     }
 
-	pub fn unlink(node: Rc<RefCell<Self>>) {
+	pub fn unlink(node: &mut Rc<RefCell<Self>>) {
 		let next = node.borrow_mut().next.take().unwrap();
 		let prev = node.borrow_mut().prev.take().unwrap();
 
@@ -124,3 +124,66 @@ impl<T> ListNode<T> {
 		}		
 	}
 }
+
+/* use std::rc::{Rc, Weak};
+use std::cell::RefCell;
+
+#[derive(Debug)]
+pub struct ListNode<T> {
+    pub val: T,
+    pub prev: Option<Weak<RefCell<ListNode<T>>>>,
+    pub next: Option<Weak<RefCell<ListNode<T>>>>
+}
+
+impl<T> ListNode<T> {
+    pub fn new(val: T) -> Rc<RefCell<Self>> {
+        let item = Self {val, prev: None, next: None};
+
+        let item_ptr = Rc::new(
+            RefCell::new(item)
+        );
+        
+        item_ptr.borrow_mut().prev = Some(Rc::downgrade(&item_ptr));
+        item_ptr.borrow_mut().next = Some(Rc::downgrade(&item_ptr));
+
+        item_ptr
+    }
+
+    pub fn link(current: &mut Rc<RefCell<Self>>, node: &mut Rc<RefCell<Self>>) {
+        let next = current.borrow_mut().next.take();
+
+        current.borrow_mut().next = Some(Rc::downgrade(node));
+
+        let current_ptr = Rc::downgrade(current);
+
+        if let Some(ptr) = next.as_ref() {
+			if Weak::ptr_eq(&current_ptr, ptr) {
+				current.borrow_mut().prev = Some(Rc::downgrade(node));
+			}
+        }
+        
+        node.borrow_mut().prev = Some(current_ptr);        
+        node.borrow_mut().next = next;
+    }
+
+	pub fn unlink(node: &mut Rc<RefCell<Self>>) {
+		let next = node.borrow_mut().next.take().unwrap();
+		let prev = node.borrow_mut().prev.take().unwrap();
+
+        let next = next.upgrade();
+        let prev = prev.upgrade();
+
+        if next.is_some() && prev.is_some() {
+            let next = next.unwrap();
+            let prev = prev.unwrap();
+
+            next.borrow_mut().prev = Some(Rc::downgrade(&prev));
+            prev.borrow_mut().next = Some(Rc::downgrade(&next));
+
+            if !Rc::ptr_eq(&next, &prev) {
+                node.borrow_mut().next = Some(Rc::downgrade(&node));
+                node.borrow_mut().prev = Some(Rc::downgrade(&node));
+            }
+        }				
+	}
+}  */
