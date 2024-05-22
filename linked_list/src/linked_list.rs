@@ -15,18 +15,24 @@ impl<T> ListNode<T> {
         Self { val, next: None }
     }
 
-    pub fn link(current: &mut Box<ListNode<T>>, mut node: Box<ListNode<T>>) {
-		let next = current.next.take();
+    pub fn link(&mut self, mut node: Box<ListNode<T>>) -> &mut Box<ListNode<T>> {
+		let next = self.next.take();
 
 		node.next = next;
 
-		current.next = Some(node);
+		self.next = Some(node);
+
+        self.next.as_mut().unwrap()
     }
 
-	pub fn unlink(prev: &mut Box<ListNode<T>>, node: &mut Box<ListNode<T>>) {
-		let next = node.next.take();
+	pub fn unlink(&mut self) -> Option<Box<ListNode<T>>> {
+		let mut next = self.next.take();
 
-		prev.next = next;
+		if let Some(node) = next.as_mut() {
+            self.next = node.next.take();
+        }
+
+        next
 	}
 }
 
@@ -43,17 +49,23 @@ impl<T> ListNode<T> {
         Self { val, next: None }
     }
 
-    pub fn link(current: Rc<RefCell<ListNode<T>>>, node: Rc<RefCell<ListNode<T>>>) {
-		let next = current.borrow_mut().next.take();
+    pub fn link(&mut self, node: Rc<RefCell<ListNode<T>>>) -> Rc<RefCell<ListNode<T>>> {
+		let next = self.next.take();
 
 		node.borrow_mut().next = next;
 
-		current.borrow_mut().next = Some(node);
+		self.next = Some(node);
+
+        self.next.as_ref().unwrap().clone()
     }
 
-    pub fn unlink(prev: Rc<RefCell<ListNode<T>>>, node: Rc<RefCell<ListNode<T>>>) {
-		let next = node.borrow_mut().next.take();
+    pub fn unlink(&mut self) -> Option<Rc<RefCell<ListNode<T>>>> {
+		let mut next = self.next.take();
 
-		prev.borrow_mut().next = next;
+		if let Some(node) = next.as_mut() {
+            self.next = node.borrow_mut().next.take();
+        }
+
+        next
 	}
 } */
